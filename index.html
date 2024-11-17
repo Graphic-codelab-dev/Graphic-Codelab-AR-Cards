@@ -11,42 +11,21 @@
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body>
-    <!-- Video que se usará como textura -->
-    <video id="video-texture" src="ruta_del_video.mp4" autoplay loop playsinline style="display: none;"></video>
-
     <a-scene embedded arjs>
         <a-marker type="pattern" url="marcador_de_prueba.patt"> <!-- Este es el marcador en donde se pone la imagen -->
-            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity> <!-- Escala del modelado con animación activada -->
+            <!-- Activa la animación con animation-mixer -->
+            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
 
         <a-assets>
-            <a-asset-item id="model" src="tarjeta_graphic_codelab_blender_v2.glb"></a-asset-item> <!-- Aca se pone la imagen renderizada -->
+            <a-asset-item id="model" src="tarjeta_graphic_codelab_blender_v2.glb"></a-asset-item> <!-- Aca se pone el modelo renderizado con animación -->
         </a-assets>
     </a-scene>
 
-    <!-- Botón de Pantalla Completa -->
-    <button id="fullscreenButton" style="position: absolute; top: 10px; right: 10px; z-index: 100; padding: 10px; font-size: 16px;">
-        Pantalla Completa
-    </button>
-
     <script>
-        // Reproduce automáticamente el video cuando se carga
+        // Intento de pantalla completa automático al cargar
         document.addEventListener("DOMContentLoaded", () => {
-            const video = document.getElementById('video-texture');
-            video.play();
-
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
-        });
-
-        // Botón de pantalla completa
-        document.getElementById("fullscreenButton").addEventListener("click", () => {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.webkitRequestFullscreen) {
@@ -58,3 +37,4 @@
     </script>
 </body>
 </html>
+
