@@ -11,28 +11,23 @@
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body>
-    <!-- Video que se usará como textura -->
-    <video id="video-texture" src="ruta_del_video.mp4" autoplay loop playsinline style="display: none;"></video>
-
+    <!-- Configuración de AR con A-Frame y marcador para modelo animado -->
     <a-scene embedded arjs>
-        <a-marker type="pattern" url="marcador_de_prueba.patt"> <!-- Este es el marcador en donde se pone la imagen -->
-            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity> <!-- Escala del modelado con animación activada -->
+        <a-marker type="pattern" url="marcador_de_prueba.patt">
+            <!-- Entidad para cargar el modelo GLB con `animation-mixer` activado -->
+            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
 
         <a-assets>
-            <a-asset-item id="model" src="tarjeta_graphic_codelab_blender_v2.glb"></a-asset-item> <!-- Aca se pone la imagen renderizada -->
+            <!-- El modelo GLB con animaciones incluidas -->
+            <a-asset-item id="model" src="tarjeta_graphic_codelab_blender_v2.glb"></a-asset-item>
         </a-assets>
     </a-scene>
 
- 
-
     <script>
-        // Reproduce automáticamente el video cuando se carga
+        // Activación de pantalla completa automática
         document.addEventListener("DOMContentLoaded", () => {
-            const video = document.getElementById('video-texture');
-            video.play();
-
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.webkitRequestFullscreen) {
@@ -41,8 +36,6 @@
                 document.documentElement.msRequestFullscreen();
             }
         });
-
-    
     </script>
 </body>
 </html>
