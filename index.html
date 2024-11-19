@@ -11,35 +11,23 @@
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body>
+    <!-- Configuración de AR con A-Frame y marcador para modelo animado -->
     <a-scene embedded arjs>
         <a-marker type="pattern" url="marcador_de_prueba.patt">
-            <a-entity gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
+            <!-- Entidad para cargar el modelo GLB con animation-mixer activado -->
+            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
+
         <a-assets>
-            <a-asset-item id="model" src="hola_mundo_blender.glb"></a-asset-item>
+            <!-- El modelo GLB con animaciones incluidas -->
+            <a-asset-item id="model" src="tarjeta_graphic_codelab.glb"></a-asset-item>
         </a-assets>
     </a-scene>
 
-    <!-- Botón de Pantalla Completa -->
-    <button id="fullscreenButton" style="position: absolute; top: 10px; right: 10px; z-index: 100; padding: 10px; font-size: 16px;">
-        Pantalla Completa
-    </button>
-
     <script>
-        // Intento de pantalla completa automático al cargar
+        // Activación de pantalla completa automática
         document.addEventListener("DOMContentLoaded", () => {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
-        });
-
-        // Alternativa con botón para entrar en pantalla completa en caso de que se necesite una interacción del usuario
-        document.getElementById("fullscreenButton").addEventListener("click", () => {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             } else if (document.documentElement.webkitRequestFullscreen) {
