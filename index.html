@@ -14,7 +14,7 @@
     <!-- Configuración de AR con A-Frame y marcador para modelo animado -->
     <a-scene embedded arjs>
         <a-marker type="pattern" url="marcador_de_prueba.patt">
-            <!-- Entidad para cargar el modelo GLB con animation-mixer activado -->
+            <!-- Entidad para cargar el modelo GLB con `animation-mixer` activado -->
             <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
