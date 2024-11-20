@@ -7,33 +7,34 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
+    <!-- Asegúrate de que estas URLs carguen correctamente en tu entorno -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body>
-    <!-- Configuración de AR con A-Frame y marcador para modelo animado -->
     <a-scene embedded arjs>
         <a-marker type="pattern" url="marcador_de_prueba.patt">
-            <!-- Entidad para cargar el modelo GLB con animation-mixer activado -->
+            <!-- Asegura que el modelo GLB se cargue con `animation-mixer` -->
             <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
         <a-entity camera></a-entity>
 
         <a-assets>
-            <!-- El modelo GLB con animaciones incluidas -->
+            <!-- Verifica la ruta del modelo GLB -->
             <a-asset-item id="model" src="tarjeta_graphic_codelab.glb"></a-asset-item>
         </a-assets>
     </a-scene>
 
     <script>
-        // Activación de pantalla completa automática
+        // Intento de pantalla completa automático al cargar
         document.addEventListener("DOMContentLoaded", () => {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
             }
         });
     </script>
