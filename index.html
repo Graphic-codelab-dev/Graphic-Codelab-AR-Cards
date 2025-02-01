@@ -2,25 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test Modelo GLB</title>
+    <title>WebAR con QR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 </head>
 <body>
-    <a-scene embedded arjs>
-        <a-assets>
-            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item>
-        </a-assets>
+    <h1>Escanea el QR para ver el modelo en AR</h1>
+    
+    <canvas id="qr-canvas"></canvas>
 
-        <a-marker preset="hiro">
-            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray"></a-plane>
-            <a-entity gltf-model="#model" scale="1 1 1" position="0 0.5 0"></a-entity>
-        </a-marker>
+    <p><a id="ar-link" href="#" target="_blank">O toca aquí para abrir en AR</a></p>
 
-        <a-entity camera></a-entity>
-    </a-scene>
+    <script>
+        // URL del modelo GLB (debes subirlo a un hosting accesible)
+        const modelURL = "https://tu-sitio.com/robot_playground.glb";
+
+        // URL para abrir en Google AR Viewer o Quick Look
+        const arIntent = `intent://arvr.google.com/scene-viewer/1.0?file=${modelURL}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;`;
+
+        // Establecer el link directo al visor de AR
+        document.getElementById("ar-link").href = arIntent;
+
+        // Generar QR
+        new QRious({
+            element: document.getElementById("qr-canvas"),
+            value: arIntent,
+            size: 250
+        });
+    </script>
 </body>
 </html>
