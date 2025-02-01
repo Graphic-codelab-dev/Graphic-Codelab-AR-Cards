@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
     
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
@@ -22,9 +19,13 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <a-marker id="qrMarker" visible="false">
-            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
-        </a-marker>
+        <a-entity id="modelContainer" visible="false">
+            <!-- Base para dar estabilidad -->
+            <a-plane position="0 0 0" rotation="-90 0 0" width="1.5" height="1.5" color="gray"></a-plane>
+
+            <!-- Modelo GLB con mejor escala y centrado -->
+            <a-entity id="animatedModel" gltf-model="#model" scale="2 2 2" position="0 0.3 0"></a-entity>
+        </a-entity>
 
         <a-entity camera></a-entity>
     </a-scene>
@@ -33,14 +34,12 @@
         const video = document.getElementById("qr-video");
         const canvas = document.getElementById("qr-canvas");
         const ctx = canvas.getContext("2d");
-        const qrMarker = document.getElementById("qrMarker");
+        const modelContainer = document.getElementById("modelContainer");
 
-        // Función para iniciar la cámara
         async function startQRScanner() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                 video.srcObject = stream;
-                video.setAttribute("playsinline", true);
                 video.play();
                 scanQR();
             } catch (error) {
@@ -48,7 +47,6 @@
             }
         }
 
-        // Escanear el QR en cada frame
         function scanQR() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
                 canvas.width = video.videoWidth;
@@ -63,9 +61,8 @@
                 if (code) {
                     console.log("QR Detectado:", code.data);
 
-                    // Aquí puedes cambiar la condición según el contenido del QR
-                    if (code.data === "https://graphic-codelab-dev.github.io/Graphic-Codelab-AR-Cards/") {
-                        qrMarker.setAttribute("visible", "true");
+                    if (code.data === "https://tupagina.com/tuqr") {
+                        modelContainer.setAttribute("visible", "true");
                     }
                 }
             }
@@ -73,7 +70,6 @@
             requestAnimationFrame(scanQR);
         }
 
-        // Iniciar escaneo al cargar la página
         document.addEventListener("DOMContentLoaded", startQRScanner);
     </script>
 </body>
