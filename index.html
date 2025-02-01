@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 </head>
 <body>
-    <video id="qr-video" autoplay playsinline style="width: 100%; display: none;"></video>
+    <video id="qr-video" autoplay playsinline style="display: none;"></video>
     <canvas id="qr-canvas" style="display: none;"></canvas>
 
     <a-scene embedded arjs>
@@ -19,13 +19,10 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <a-entity id="modelContainer" visible="false">
-            <!-- Base para dar estabilidad -->
-            <a-plane position="0 0 0" rotation="-90 0 0" width="1.5" height="1.5" color="gray"></a-plane>
-
-            <!-- Modelo GLB con mejor escala y centrado -->
+        <a-marker id="qrMarker" type="barcode" value="0">  
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray"></a-plane>
             <a-entity id="animatedModel" gltf-model="#model" scale="2 2 2" position="0 0.3 0"></a-entity>
-        </a-entity>
+        </a-marker>
 
         <a-entity camera></a-entity>
     </a-scene>
@@ -34,7 +31,7 @@
         const video = document.getElementById("qr-video");
         const canvas = document.getElementById("qr-canvas");
         const ctx = canvas.getContext("2d");
-        const modelContainer = document.getElementById("modelContainer");
+        const qrMarker = document.getElementById("qrMarker");
 
         async function startQRScanner() {
             try {
@@ -60,9 +57,9 @@
 
                 if (code) {
                     console.log("QR Detectado:", code.data);
-
+                    
                     if (code.data === "https://graphic-codelab-dev.github.io/Graphic-Codelab-AR-Cards/") {
-                        modelContainer.setAttribute("visible", "true");
+                        qrMarker.setAttribute("value", "0"); // Activar el marcador
                     }
                 }
             }
