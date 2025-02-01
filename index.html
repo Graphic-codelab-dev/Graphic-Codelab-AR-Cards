@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Librerías necesarias -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -11,49 +14,41 @@
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body>
-    <!-- Escena con depuración activada -->
-    <a-scene embedded arjs="debugUIEnabled: true">
+    <a-scene embedded arjs>
         <a-assets>
             <!-- Modelo GLB -->
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- MARCADOR TEST: Cambia Hiro por NFT si Hiro funciona
-        <a-marker preset="hiro">
-            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"
-                      animation-mixer="clip: *; loop: repeat; timeScale: 1">
-            </a-entity>
-        </a-marker>
-        
-        -->
-
-        <!-- Alternativa: NFT Marker (Si Hiro funciona, prueba el NFT) -->
-        <!-- -->
-         
-        <a-nft type="nft" url="https://graphic-codelab-dev.github.io/GraphicCodelabQR.iset">
-            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"
-                      animation-mixer="clip: *; loop: repeat; timeScale: 1">
-            </a-entity>
+        <!-- Cambio de pattern a NFT Marker -->
+        <a-nft type="nft" url="GraphicCodelabQR">
+            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
         </a-nft>
         
-
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("Página cargada. Esperando modelo...");
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
         });
 
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
-            console.log("✅ Modelo cargado. Iniciando animación...");
+            console.log("Modelo cargado. Iniciando animación...");
 
             const model = event.detail.model;
             if (model && model.animations && model.animations.length > 0) {
-                console.log("🎬 Animaciones encontradas:", model.animations.map(a => a.name));
+                console.log("Animaciones encontradas:", model.animations.map(a => a.name));
                 event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
             } else {
-                console.warn("⚠️ No se encontraron animaciones en el modelo.");
+                console.warn("No se encontraron animaciones en el modelo.");
             }
         });
     </script>
