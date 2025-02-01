@@ -14,21 +14,24 @@
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body>
-    <a-scene embedded arjs>
+    <a-scene 
+        embedded 
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; 
+              detectionMode: mono_and_matrix; matrixCodeType: 3x3; smooth: true; smoothCount: 10; smoothTolerance: 0.05; smoothThreshold: 5">
+        
         <a-assets>
-            <!-- Verifica que la ruta del modelo GLB sea correcta -->
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
         <a-marker type="pattern" url="graphicCodelabMar.patt">
-            <!-- Base para estabilizar el modelo -->
-            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray" opacity="0.5"></a-plane>
+            <!-- Base para estabilizar -->
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray" opacity="0.2"></a-plane>
             
             <!-- Modelo GLB con ajustes -->
             <a-entity 
                 id="animatedModel"
                 gltf-model="#model"
-                scale="5 5 5" 
+                scale="4 4 4" 
                 position="0 0.5 0"
                 animation-mixer="clip: *; loop: repeat; timeScale: 1">
             </a-entity>
