@@ -19,10 +19,11 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <a-marker id="qrMarker" type="barcode" value="0">  
-            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray"></a-plane>
-            <a-entity id="animatedModel" gltf-model="#model" scale="2 2 2" position="0 0.3 0"></a-entity>
-        </a-marker>
+        <!-- 📌 Usa un marcador más grande y estable -->
+        <a-marker-camera preset="hiro" id="qrMarker">
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2.5" height="2.5" color="gray"></a-plane>
+            <a-entity id="animatedModel" gltf-model="#model" scale="2 2 2" position="0 0.5 0"></a-entity>
+        </a-marker-camera>
 
         <a-entity camera></a-entity>
     </a-scene>
@@ -59,7 +60,7 @@
                     console.log("QR Detectado:", code.data);
                     
                     if (code.data === "https://graphic-codelab-dev.github.io/Graphic-Codelab-AR-Cards/") {
-                        qrMarker.setAttribute("value", "0"); // Activar el marcador
+                        qrMarker.setAttribute("preset", "custom"); // Activar marcador
                     }
                 }
             }
