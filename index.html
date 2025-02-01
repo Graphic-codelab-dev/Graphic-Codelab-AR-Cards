@@ -2,32 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WebAR con QR</title>
+    <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Asegúrate de que estas URLs carguen correctamente en tu entorno -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body>
-    <h1>Escanea el QR para ver el modelo en AR</h1>
-    
-    <canvas id="qr-canvas"></canvas>
+    <a-scene embedded arjs>
+        <a-assets>
+            <!-- Verifica que la ruta del modelo GLB sea correcta -->
+            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
+        </a-assets>
 
-    <p><a id="ar-link" href="#" target="_blank">O toca aquí para abrir en AR</a></p>
+        <a-marker type="pattern" url="graphicCodelabMar.patt">
+            <!-- Modelo GLB sin animation-mixer directo -->
+            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
+        </a-marker>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
 
     <script>
-        // URL del modelo GLB (debes subirlo a un hosting accesible)
-        const modelURL = "https://graphic-codelab-dev.github.io/Graphic-Codelab-AR-Cards/robot_playground.glb";
+        document.addEventListener("DOMContentLoaded", () => {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        });
 
-        // URL para abrir en Google AR Viewer o Quick Look
-        const arIntent = `intent://arvr.google.com/scene-viewer/1.0?file=${modelURL}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;`;
+        document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
+            console.log("Modelo cargado. Iniciando animación...");
 
-        // Establecer el link directo al visor de AR
-        document.getElementById("ar-link").href = arIntent;
+            // Muestra los clips de animación disponibles en la consola
+            const animations = event.detail.model.animations.map(a => a.name);
+            console.log("Clips de animación disponibles:", animations);
 
-        // Generar QR
-        new QRious({
-            element: document.getElementById("qr-canvas"),
-            value: arIntent,
-            size: 250
+            // Aplica animation-mixer solo si hay animaciones en el modelo
+            if (animations.length > 0) {
+                event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
+            } else {
+                console.warn("No se encontraron animaciones en el modelo.");
+            }
         });
     </script>
 </body>
