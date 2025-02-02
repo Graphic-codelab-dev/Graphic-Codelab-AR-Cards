@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AR Hit-Testing</title>
+    <title>AR Hit-Testing Debug</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -12,16 +12,12 @@
     <a-scene
         renderer="colorManagement: true; physicallyCorrectLights"
         xr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; debugUIEnabled: false"
+        arjs="sourceType: webcam; debugUIEnabled: true"
         embedded
         vr-mode-ui="enabled: false">
-        
-        <a-assets>
-            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item>
-        </a-assets>
 
-        <!-- Modelo GLB, oculto hasta que haya una detección -->
-        <a-entity id="placedModel" gltf-model="#model" scale="0.3 0.3 0.3" visible="false"></a-entity>
+        <!-- Indicador de hit-testing -->
+        <a-entity id="indicator" geometry="primitive: sphere; radius: 0.05" material="color: red" visible="false"></a-entity>
 
         <a-camera position="0 1.6 0"></a-camera>
     </a-scene>
@@ -29,13 +25,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             let scene = document.querySelector("a-scene");
-            let placedModel = document.getElementById("placedModel");
+            let indicator = document.getElementById("indicator");
 
-            // Evento de hit-testing: coloca el modelo en la primera superficie detectada
+            // Evento de hit-testing
             scene.addEventListener("ar-hit-test-select", (event) => {
                 let position = event.detail.position;
-                placedModel.setAttribute("position", `${position.x} ${position.y} ${position.z}`);
-                placedModel.setAttribute("visible", "true");
+                indicator.setAttribute("position", `${position.x} ${position.y} ${position.z}`);
+                indicator.setAttribute("visible", "true");
             });
         });
     </script>
