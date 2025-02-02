@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- Librerías necesarias -->
+    <!-- Asegúrate de que estas URLs carguen correctamente -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
@@ -13,29 +16,45 @@
 <body>
     <a-scene embedded arjs>
         <a-assets>
-            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item>
+            <!-- Verifica que la ruta del modelo GLB sea correcta -->
+            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
-    
+
         <a-marker type="pattern" url="graphicCodelabMar.patt">
-            <!-- Asignamos un ID para manipularlo con JavaScript -->
-            <a-entity id="modelEntity" gltf-model="#model" scale="0.5 0.5 0.5" position="0 0 0"
-                      animation-mixer></a-entity>
+            <!-- Base para estabilizar el modelo -->
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray" opacity="0.5"></a-plane>
+            
+            <!-- Modelo GLB con ajustes -->
+            <a-entity 
+                id="animatedModel"
+                gltf-model="#model"
+                scale="5 5 5" 
+                position="0 0.5 0"
+                animation-mixer="clip: *; loop: repeat; timeScale: 1">
+            </a-entity>
         </a-marker>
-    
+        
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("🔄 Página cargada, esperando modelo...");
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
         });
 
-        document.querySelector("#modelEntity").addEventListener("model-loaded", function(event) {
+        document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("✅ Modelo cargado correctamente.");
-
+            
             // Verifica los clips de animación disponibles
             const animations = event.detail.model.animations.map(a => a.name);
-            console.log("🎞 Clips de animación disponibles:", animations);
+            console.log("🎞 Clips de animación encontrados:", animations);
 
             if (animations.length === 0) {
                 console.warn("⚠ No se encontraron animaciones en el modelo.");
