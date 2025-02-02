@@ -2,37 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AR Hit-Testing Debug</title>
+    <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     
+    <!-- Asegúrate de que estas URLs carguen correctamente -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@ar-js-org/ar.js@latest/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body>
-    <a-scene
-        renderer="colorManagement: true; physicallyCorrectLights"
-        xr-mode-ui="enabled: false"
-        arjs="sourceType: webcam; debugUIEnabled: true"
-        embedded
-        vr-mode-ui="enabled: false">
-
-        <!-- Indicador de hit-testing -->
-        <a-entity id="indicator" geometry="primitive: sphere; radius: 0.05" material="color: red" visible="false"></a-entity>
-
-        <a-camera position="0 1.6 0"></a-camera>
+    <a-scene embedded arjs>
+        <a-assets>
+            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item>
+        </a-assets>
+    
+        <a-marker type="pattern" url="graphicCodelabMar.patt">
+            <a-entity gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
+        </a-marker>
+    
+        <a-entity camera></a-entity>
     </a-scene>
+    
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            let scene = document.querySelector("a-scene");
-            let indicator = document.getElementById("indicator");
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        });
 
-            // Evento de hit-testing
-            scene.addEventListener("ar-hit-test-select", (event) => {
-                let position = event.detail.position;
-                indicator.setAttribute("position", `${position.x} ${position.y} ${position.z}`);
-                indicator.setAttribute("visible", "true");
-            });
+        document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
+            console.log("✅ Modelo cargado correctamente.");
+            
+            // Verifica los clips de animación disponibles
+            const animations = event.detail.model.animations.map(a => a.name);
+            console.log("🎞 Clips de animación encontrados:", animations);
+
+            if (animations.length === 0) {
+                console.warn("⚠ No se encontraron animaciones en el modelo.");
+            }
         });
     </script>
 </body>
