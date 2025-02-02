@@ -17,15 +17,15 @@
         </a-assets>
 
         <!-- Método con QR/Marcador (Usar si el GPS no funciona) -->
-        <a-marker type="pattern" url="graphicCodelabMar.patt">
+       
             <a-entity  
                 id="animatedModel" 
                 gltf-model="#model" 
-                position="0 0 0"
-                scale="5 5 5"
+                position="0 0 -7"
+                scale="1 1 1"
                 rotation="0 0 0">
             </a-entity>
-        </a-marker>
+        
 
         <!-- Cámara con GPS activado -->
         <a-camera gps-camera rotation-reader></a-camera>
