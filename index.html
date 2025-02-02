@@ -20,13 +20,17 @@
         </a-assets>
 
         <!-- Modelo 3D (siempre en el centro) -->
-        <a-entity  
-            id="animatedModel" 
-            gltf-model="#model" 
-            position="0 0.5 -5" 
-            scale="1 1 1"
-            rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
-        </a-entity>
+        <a-marker type="pattern" url="graphicCodelabMar.patt">
+            <a-entity  
+                id="animatedModel" 
+                gltf-model="#model" 
+                position="0 0.5 -5" 
+                scale="5 5 5"
+                rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
+            </a-entity>
+        </a-marker>
+
+
 
         <!-- Cámara activada para AR -->
         <a-camera gps-camera rotation-reader></a-camera>
