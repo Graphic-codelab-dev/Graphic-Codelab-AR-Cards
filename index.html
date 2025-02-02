@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- Librerías necesarias -->
+    <!-- Asegúrate de que estas URLs carguen correctamente -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
@@ -17,24 +17,25 @@
     <a-scene 
         embedded 
         arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; 
-              detectionMode: mono_and_matrix; matrixCodeType: 3x3; 
-              smooth: true; smoothCount: 15; smoothTolerance: 0.01; smoothThreshold: 15;">
+              detectionMode: mono_and_matrix; matrixCodeType: 3x3; smooth: true; smoothCount: 10; smoothTolerance: 0.05; smoothThreshold: 5">
         
         <a-assets>
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Usamos anchor para evitar que el modelo desaparezca cuando se pierde la marca -->
-        <a-anchor hit-testing-enabled>
+        <a-marker type="pattern" url="graphicCodelabMar.patt">
+            <!-- Base para estabilizar -->
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2" color="gray" opacity="0.2"></a-plane>
+            
+            <!-- Modelo GLB con ajustes -->
             <a-entity 
                 id="animatedModel"
                 gltf-model="#model"
-                scale="3 3 3" 
-                position="0 0 0"
-                animation-mixer="clip: *; loop: repeat; timeScale: 1; crossFadeDuration: 1"
-                shadow="cast: true;">
+                scale="4 4 4" 
+                position="0 0.5 0"
+                animation-mixer="clip: *; loop: repeat; timeScale: 1">
             </a-entity>
-        </a-anchor>
+        </a-marker>
         
         <a-entity camera></a-entity>
     </a-scene>
@@ -54,6 +55,7 @@
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("✅ Modelo cargado correctamente.");
             
+            // Verifica los clips de animación disponibles
             const animations = event.detail.model.animations.map(a => a.name);
             console.log("🎞 Clips de animación encontrados:", animations);
 
