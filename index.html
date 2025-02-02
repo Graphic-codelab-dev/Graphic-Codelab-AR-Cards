@@ -11,19 +11,21 @@
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: camera; debugUIEnabled: false;">
+    <a-scene 
+        embedded 
+        arjs="trackingMethod: best; debugUIEnabled: false;">
+        
         <a-assets>
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Modelo 3D con manipulación táctil -->
+        <!-- Modelo 3D -->
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
             position="0 0 -7"
             scale="1 1 1"
-            rotation="0 0 0"
-            gesture-detector>
+            rotation="0 0 0">
         </a-entity>
 
         <!-- Cámara con GPS activado -->
@@ -34,6 +36,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             console.log("AR.js cargado correctamente.");
 
+            // Verificar si el navegador tiene soporte de geolocalización
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -44,8 +47,8 @@
 
                         setTimeout(() => {
                             const model = document.querySelector("#animatedModel");
-                            model.setAttribute("gps-entity-place", `latitude: ${lat}; longitude: ${lon}`);
-                        }, 3000); // Espera 3 segundos para asegurar carga de ubicación
+                            model.setAttribute("gps-projected-entity-place", `latitude: ${lat}; longitude: ${lon}`);
+                        }, 2000); // Esperar 2 segundos para asegurar carga de GPS
                     },
                     (err) => console.warn("No se pudo obtener la ubicación.", err),
                     { enableHighAccuracy: true }
@@ -55,6 +58,7 @@
             }
         });
 
+        // Asegurar que el modelo cargue correctamente y active la animación
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("Modelo cargado. Iniciando animación...");
 
