@@ -4,50 +4,48 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- Asegúrate de que estas URLs carguen correctamente en tu entorno -->
+    <!-- Cargar A-Frame y AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
-<body>
-    <a-scene embedded arjs>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene 
+        embedded 
+        arjs="trackingMethod: best; debugUIEnabled: false;">
+        
         <a-assets>
-            <!-- Verifica que la ruta del modelo GLB sea correcta -->
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
+        <!-- Modelo 3D (siempre en el centro) -->
         <a-marker type="pattern" url="graphicCodelabMar.patt">
-            <!-- Modelo GLB sin animation-mixer directo -->
-            <a-entity id="animatedModel" gltf-model="#model" scale="1 1 1" position="0 0 0"></a-entity>
+        <a-entity  
+            id="animatedModel" 
+            gltf-model="#model" 
+            position="0 0.5 -5" 
+            scale="1 1 1"
+            rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
+        </a-entity>
+
+        <!-- Cámara activada para AR -->
+        <a-camera gps-camera rotation-reader></a-camera>
         </a-marker>
-        
-        <a-entity camera></a-entity>
+
     </a-scene>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const docEl = document.documentElement;
-            if (docEl.requestFullscreen) {
-                docEl.requestFullscreen();
-            } else if (docEl.webkitRequestFullscreen) {
-                docEl.webkitRequestFullscreen();
-            } else if (docEl.msRequestFullscreen) {
-                docEl.msRequestFullscreen();
-            }
+            console.log("AR.js cargado correctamente.");
         });
 
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("Modelo cargado. Iniciando animación...");
 
-            // Muestra los clips de animación disponibles en la consola
             const animations = event.detail.model.animations.map(a => a.name);
             console.log("Clips de animación disponibles:", animations);
 
-            // Aplica animation-mixer solo si hay animaciones en el modelo
             if (animations.length > 0) {
                 event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
             } else {
@@ -57,3 +55,4 @@
     </script>
 </body>
 </html>
+
