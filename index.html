@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="mobile-web-app-capable" content="yes">
     
     <!-- Cargar A-Frame y AR.js -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
@@ -19,27 +16,18 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Mostrar el modelo en el entorno real -->
-
+        <!-- Método con QR/Marcador (Usar si el GPS no funciona) -->
+        <a-marker type="barcode" value="5">
             <a-entity  
                 id="animatedModel" 
                 gltf-model="#model" 
-                position="0 1.5 -1.5"
+                position="0 0 0"
                 scale="0.2 0.2 0.2"
                 rotation="0 0 0">
             </a-entity>
-       
-
-        <!--
-        <a-marker type="barcode" value="5" anchor="center">
-            <a-entity id="animatedModel"
-                      gltf-model="#model"
-                      scale="1 1 1"
-                      position="0 0 0">
-            </a-entity>
         </a-marker>
-        -->
 
+        <!-- Cámara con GPS activado -->
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
 
@@ -47,30 +35,33 @@
         document.addEventListener("DOMContentLoaded", () => {
             console.log("AR.js cargado correctamente.");
 
-            // Obtener la ubicación del usuario y colocar el modelo
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
+            // Comprobar si el navegador soporta geolocalización
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
 
-                    const model = document.querySelector("#animatedModel");
-                    model.setAttribute("gps-projected-entity-place", `latitude: ${lat}; longitude: ${lon}`);
+                        console.log(`Ubicación obtenida: lat ${lat}, lon ${lon}`);
 
-                    console.log(`Ubicación establecida en lat: ${lat}, lon: ${lon}`);
-                },
-                (err) => console.warn("No se pudo obtener la ubicación.", err),
-                { enableHighAccuracy: true }
-            );
+                        const model = document.querySelector("#animatedModel");
+                        model.setAttribute("gps-projected-entity-place", `latitude: ${lat}; longitude: ${lon}`);
+
+                    },
+                    (err) => console.warn("No se pudo obtener la ubicación.", err),
+                    { enableHighAccuracy: true }
+                );
+            } else {
+                console.warn("Geolocalización no disponible en este navegador.");
+            }
         });
 
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("Modelo cargado. Iniciando animación...");
 
-            // Obtener las animaciones del modelo
             const animations = event.detail.model.animations.map(a => a.name);
             console.log("Clips de animación disponibles:", animations);
 
-            // Aplicar animation-mixer si hay animaciones
             if (animations.length > 0) {
                 event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
             } else {
