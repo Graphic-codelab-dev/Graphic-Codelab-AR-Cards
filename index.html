@@ -20,6 +20,7 @@
         </a-assets>
 
         <!-- Modelo 3D (siempre en el centro) -->
+        <a-marker type="pattern" url="graphicCodelabMar.patt">
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
@@ -30,6 +31,8 @@
 
         <!-- Cámara activada para AR -->
         <a-camera gps-camera rotation-reader></a-camera>
+        </a-marker>
+
     </a-scene>
 
     <script>
