@@ -4,52 +4,38 @@
     <meta charset="UTF-8">
     <title>AR.js con A-Frame</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    
-    <!-- Cargar A-Frame y AR.js -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- Asegúrate de que estas URLs carguen correctamente en tu entorno -->
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
+    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
 </head>
-<body style="margin: 0; overflow: hidden;">
-    <a-scene 
-        embedded 
-        arjs="trackingMethod: best; debugUIEnabled: false;">
-        
-        <a-assets>
-            <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
-        </a-assets>
-
-        <!-- Modelo 3D (siempre en el centro) -->
+<body>
+    <a-scene embedded arjs>
         <a-marker type="pattern" url="graphicCodelabMar.patt">
-        <a-entity  
-            id="animatedModel" 
-            gltf-model="#model" 
-            position="0 0.5 -5" 
-            scale="1 1 1"
-            rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
-        </a-entity>
-
-        <!-- Cámara activada para AR -->
-        <a-camera gps-camera rotation-reader></a-camera>
+            <!-- Asegura que el modelo GLB se cargue con `animation-mixer` -->
+            <a-entity gltf-model="#model" scale="10 10 10" position="0 0 0" animation-mixer></a-entity>
         </a-marker>
+        <a-entity camera></a-entity>
 
+        <a-assets>
+            <!-- Verifica la ruta del modelo GLB -->
+            <a-asset-item id="model" src="tarjeta_graphic_codelab.glb"></a-asset-item> 
+           
+        </a-assets>
     </a-scene>
 
     <script>
+        // Intento de pantalla completa automático al cargar
         document.addEventListener("DOMContentLoaded", () => {
-            console.log("AR.js cargado correctamente.");
-        });
-
-        document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
-            console.log("Modelo cargado. Iniciando animación...");
-
-            const animations = event.detail.model.animations.map(a => a.name);
-            console.log("Clips de animación disponibles:", animations);
-
-            if (animations.length > 0) {
-                event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
-            } else {
-                console.warn("No se encontraron animaciones en el modelo.");
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
             }
         });
     </script>
