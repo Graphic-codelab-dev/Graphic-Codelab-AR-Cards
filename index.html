@@ -13,16 +13,16 @@
 <body style="margin: 0; overflow: hidden;">
     <a-scene 
         embedded 
-        arjs="trackingMethod: best; debugUIEnabled: false;">
+        arjs="trackingMethod: best; debugUIEnabled: false; detectionMode: mono_and_matrix; minConfidence: 5;">
         
         <a-assets>
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Marcador solo para detección -->
-        <a-marker type="pattern" url="graphicCodelabMar.patt" id="marker"></a-marker>
+        <!-- Marcador ajustado para mejor detección -->
+        <a-marker type="pattern" url="graphicCodelabMar.patt" id="marker" size="50"></a-marker>
 
-        <!-- Modelo 3D con animación (oculto al inicio) -->
+        <!-- Modelo 3D con animación -->
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
@@ -32,7 +32,7 @@
             visible="false">
         </a-entity>
 
-        <!-- Cámara FIJA sin movimiento -->
+        <!-- Cámara fija sin movimiento -->
         <a-camera id="camera" look-controls="enabled: false" wasd-controls="enabled: false"></a-camera>
 
     </a-scene>
@@ -43,7 +43,6 @@
 
         let isModelLoaded = false;
 
-        // Detectar si el modelo ya está cargado para aplicar animación
         model.addEventListener("model-loaded", function(event) {
             console.log("Modelo cargado. Iniciando animación...");
 
@@ -58,12 +57,11 @@
             }
         });
 
-        // Mostrar el modelo cuando se detecta el marcador y reiniciar animación
+        // Mostrar el modelo cuando se detecta el marcador
         marker.addEventListener("markerFound", () => {
             console.log("Marcador detectado. Mostrando modelo...");
             model.setAttribute("visible", "true");
 
-            // Si el modelo ya estaba cargado, reiniciar la animación
             if (isModelLoaded) {
                 model.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
             }
