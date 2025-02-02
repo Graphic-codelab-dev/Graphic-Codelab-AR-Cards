@@ -19,46 +19,24 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Modelo 3D -->
+        <!-- Modelo 3D (siempre en el centro) -->
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
-            position="0 0 -7"
+            position="0 0.5 -5" 
             scale="1 1 1"
-            rotation="0 0 0">
+            rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
         </a-entity>
 
-        <!-- Cámara con GPS activado -->
+        <!-- Cámara activada para AR -->
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             console.log("AR.js cargado correctamente.");
-
-            // Verificar si el navegador tiene soporte de geolocalización
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-
-                        console.log(`Ubicación obtenida: lat ${lat}, lon ${lon}`);
-
-                        setTimeout(() => {
-                            const model = document.querySelector("#animatedModel");
-                            model.setAttribute("gps-projected-entity-place", `latitude: ${lat}; longitude: ${lon}`);
-                        }, 2000); // Esperar 2 segundos para asegurar carga de GPS
-                    },
-                    (err) => console.warn("No se pudo obtener la ubicación.", err),
-                    { enableHighAccuracy: true }
-                );
-            } else {
-                console.warn("Geolocalización no disponible en este navegador.");
-            }
         });
 
-        // Asegurar que el modelo cargue correctamente y active la animación
         document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
             console.log("Modelo cargado. Iniciando animación...");
 
