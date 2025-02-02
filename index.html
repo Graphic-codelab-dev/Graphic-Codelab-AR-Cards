@@ -11,21 +11,20 @@
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene embedded arjs="sourceType: camera; debugUIEnabled: false;">
         <a-assets>
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Método con QR/Marcador (Usar si el GPS no funciona) -->
-       
-            <a-entity  
-                id="animatedModel" 
-                gltf-model="#model" 
-                position="0 0 -7"
-                scale="1 1 1"
-                rotation="0 0 0">
-            </a-entity>
-        
+        <!-- Modelo 3D con manipulación táctil -->
+        <a-entity  
+            id="animatedModel" 
+            gltf-model="#model" 
+            position="0 0 -7"
+            scale="1 1 1"
+            rotation="0 0 0"
+            gesture-detector>
+        </a-entity>
 
         <!-- Cámara con GPS activado -->
         <a-camera gps-camera rotation-reader></a-camera>
@@ -35,7 +34,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             console.log("AR.js cargado correctamente.");
 
-            // Comprobar si el navegador soporta geolocalización
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
@@ -44,9 +42,10 @@
 
                         console.log(`Ubicación obtenida: lat ${lat}, lon ${lon}`);
 
-                        const model = document.querySelector("#animatedModel");
-                        model.setAttribute("gps-projected-entity-place", `latitude: ${lat}; longitude: ${lon}`);
-
+                        setTimeout(() => {
+                            const model = document.querySelector("#animatedModel");
+                            model.setAttribute("gps-entity-place", `latitude: ${lat}; longitude: ${lon}`);
+                        }, 3000); // Espera 3 segundos para asegurar carga de ubicación
                     },
                     (err) => console.warn("No se pudo obtener la ubicación.", err),
                     { enableHighAccuracy: true }
