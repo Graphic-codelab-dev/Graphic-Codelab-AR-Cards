@@ -19,17 +19,17 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Marcador solo para detección, no para posicionar el modelo -->
+        <!-- Marcador solo para detección -->
         <a-marker type="pattern" url="graphicCodelabMar.patt" id="marker"></a-marker>
 
-        <!-- Modelo 3D (SIEMPRE frente a la cámara, pero oculto al inicio) -->
+        <!-- Modelo 3D con animación (oculto al inicio) -->
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
-            position="0 0 -2"  
+            position="0 0.5 -10"  
             scale="1 1 1"
             rotation="0 0 0"
-            visible="false">  <!-- Oculto por defecto -->
+            visible="false">
         </a-entity>
 
         <!-- Cámara FIJA sin movimiento -->
@@ -41,10 +41,32 @@
         const marker = document.querySelector("#marker");
         const model = document.querySelector("#animatedModel");
 
-        // Mostrar el modelo cuando se detecta el marcador
+        let isModelLoaded = false;
+
+        // Detectar si el modelo ya está cargado para aplicar animación
+        model.addEventListener("model-loaded", function(event) {
+            console.log("Modelo cargado. Iniciando animación...");
+
+            const animations = event.detail.model.animations.map(a => a.name);
+            console.log("Clips de animación disponibles:", animations);
+
+            if (animations.length > 0) {
+                model.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
+                isModelLoaded = true;
+            } else {
+                console.warn("No se encontraron animaciones en el modelo.");
+            }
+        });
+
+        // Mostrar el modelo cuando se detecta el marcador y reiniciar animación
         marker.addEventListener("markerFound", () => {
             console.log("Marcador detectado. Mostrando modelo...");
             model.setAttribute("visible", "true");
+
+            // Si el modelo ya estaba cargado, reiniciar la animación
+            if (isModelLoaded) {
+                model.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
+            }
         });
 
         // Ocultar el modelo cuando se pierde el marcador
