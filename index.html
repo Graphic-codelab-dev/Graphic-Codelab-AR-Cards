@@ -19,40 +19,39 @@
             <a-asset-item id="model" src="robot_playground.glb"></a-asset-item> 
         </a-assets>
 
-        <!-- Modelo 3D (siempre en el centro) -->
-        <a-marker type="pattern" url="graphicCodelabMar.patt">
+        <!-- Marcador solo para detección, no para posicionar el modelo -->
+        <a-marker type="pattern" url="graphicCodelabMar.patt" id="marker"></a-marker>
+
+        <!-- Modelo 3D (SIEMPRE frente a la cámara, pero oculto al inicio) -->
         <a-entity  
             id="animatedModel" 
             gltf-model="#model" 
-            position="0 0.5 -5" 
+            position="0 0 -2"  
             scale="1 1 1"
-            rotation="0 0 0">  <!-- Ajuste opcional si el modelo aparece volteado -->
+            rotation="0 0 0"
+            visible="false">  <!-- Oculto por defecto -->
         </a-entity>
 
-        <!-- Cámara activada para AR -->
-        <a-camera gps-camera rotation-reader></a-camera>
-        </a-marker>
+        <!-- Cámara FIJA sin movimiento -->
+        <a-camera id="camera" look-controls="enabled: false" wasd-controls="enabled: false"></a-camera>
 
     </a-scene>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("AR.js cargado correctamente.");
+        const marker = document.querySelector("#marker");
+        const model = document.querySelector("#animatedModel");
+
+        // Mostrar el modelo cuando se detecta el marcador
+        marker.addEventListener("markerFound", () => {
+            console.log("Marcador detectado. Mostrando modelo...");
+            model.setAttribute("visible", "true");
         });
 
-        document.querySelector("#animatedModel").addEventListener("model-loaded", function(event) {
-            console.log("Modelo cargado. Iniciando animación...");
-
-            const animations = event.detail.model.animations.map(a => a.name);
-            console.log("Clips de animación disponibles:", animations);
-
-            if (animations.length > 0) {
-                event.target.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
-            } else {
-                console.warn("No se encontraron animaciones en el modelo.");
-            }
+        // Ocultar el modelo cuando se pierde el marcador
+        marker.addEventListener("markerLost", () => {
+            console.log("Marcador perdido. Ocultando modelo...");
+            model.setAttribute("visible", "false");
         });
     </script>
 </body>
 </html>
-
