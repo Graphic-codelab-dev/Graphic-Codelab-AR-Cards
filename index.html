@@ -12,33 +12,19 @@
     <iframe id="contentFrame"></iframe> <!-- Contenedor para cargar las vistas -->
 
     <script>
-        // Base path en GitHub Pages (cambia esto si tu repositorio tiene otro nombre)
-        const BASE_PATH = "/Graphic-Codelab-AR-Cards";
+        const basePath = "/Graphic-Codelab-AR-Cards";  // Base del proyecto en GitHub Pages
+        const path = window.location.pathname.replace(basePath, "").replace(/\/$/, ""); // Elimina la barra final
 
-        // Rutas de las vistas
         const routes = {
-            "/": `${BASE_PATH}/views/robot.html`,
-            "/index.html": `${BASE_PATH}/views/robot.html`,
-            "/whale": `${BASE_PATH}/views/whale.html`,
-            "/tiger": `${BASE_PATH}/views/tiger.html`,
-            "/avocado": `${BASE_PATH}/views/avocado.html`
+            "": "views/robot.html",  // Carga robot.html cuando la URL es la raíz del proyecto
+            "index.html": "views/robot.html",
+            "whale": "views/whale.html",
+            "tiger": "views/tiger.html",
+            "avocado": "views/avocado.html"
         };
 
-        function loadView() {
-            let path = window.location.pathname;
-
-            // Asegurar que el path incluya el base path correcto
-            if (path.startsWith(BASE_PATH)) {
-                path = path.replace(BASE_PATH, "");
-            }
-
-            const view = routes[path] || routes["/"];
-            //document.getElementById("contentFrame").src = view; // Carga la vista en el iframe
-            document.getElementById("contentFrame").src = "." + view;
-
-        }
-
-        loadView();
+        // Cargar la vista en el iframe
+        document.getElementById("contentFrame").src = basePath + "/" + (routes[path] || routes[""]);
     </script>
 </body>
 </html>
