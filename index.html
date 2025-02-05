@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Graphic Codelab AR</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
 </head>
 <body>
-    <div id="content"></div> <!-- Aquí se carga la vista -->
+    <iframe id="contentFrame"></iframe> <!-- Contenedor para cargar las vistas -->
 
     <script>
         const routes = {
-            "/": "views/robot.html",  // Al abrir index.html, carga robot.html
-            "/index.html": "views/robot.html", 
+            "/": "views/robot.html",  // Cuando la URL es index.html, carga robot.html
+            "/index.html": "views/robot.html",
             "/whale": "views/whale.html",
             "/tiger": "views/tiger.html",
-            "/dragon": "views/dragon.html"
+            "/avocado": "views/avocado.html"
         };
 
-        async function loadView() {
+        function loadView() {
             const path = window.location.pathname.replace("/Graphic-Codelab-AR-Cards", ""); 
             const view = routes[path] || routes["/"];
-            document.getElementById("content").innerHTML = await fetch(view).then(res => res.text());
+            document.getElementById("contentFrame").src = view; // Carga la vista en el iframe
         }
 
         loadView();
     </script>
 </body>
 </html>
-
