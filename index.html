@@ -33,7 +33,9 @@
             }
 
             const view = routes[path] || routes["/"];
-            document.getElementById("contentFrame").src = view; // Carga la vista en el iframe
+            //document.getElementById("contentFrame").src = view; // Carga la vista en el iframe
+            document.getElementById("contentFrame").src = "." + view;
+
         }
 
         loadView();
