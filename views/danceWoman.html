@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AR.js con A-Frame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <!-- Asegúrate de que estas URLs carguen correctamente en tu entorno -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+</head>
+<body>
+    <a-scene embedded arjs>
+        <a-marker type="pattern" url="/assets/markers/defaultMarkerForTesting.patt">
+            <!-- Asegura que el modelo GLB se cargue con `animation-mixer` -->
+            <a-entity gltf-model="#model" scale="1 1 1" position="0 0 0" animation-mixer></a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
+
+        <a-assets>
+            <!-- Verifica la ruta del modelo GLB -->
+            <a-asset-item id="model" src="/assets/models/danceWoman.glb"></a-asset-item> 
+           
+        </a-assets>
+    </a-scene>
+
+    <script>
+        // Intento de pantalla completa automático al cargar
+        document.addEventListener("DOMContentLoaded", () => {
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen();
+            } else if (docEl.webkitRequestFullscreen) {
+                docEl.webkitRequestFullscreen();
+            } else if (docEl.msRequestFullscreen) {
+                docEl.msRequestFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>

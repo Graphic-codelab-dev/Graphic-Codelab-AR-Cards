@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AR.js con A-Frame</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+    <!-- Cargar A-Frame y AR.js -->
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@latest/dist/aframe-extras.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
+    <a-scene 
+        embedded 
+        arjs="trackingMethod: best; debugUIEnabled: false; detectionMode: mono_and_matrix; minConfidence: 5;">
+        
+        <a-assets>
+            <a-asset-item id="model" src="/assets/models/robot_playground.glb"></a-asset-item> 
+        </a-assets>
+
+        <!-- Marcador ajustado para mejor detección -->
+        <a-marker type="pattern" url="/assets/markers/graphicCodelabMar.patt" id="marker" size="50"></a-marker>
+
+        <!-- Modelo 3D con animación -->
+        <a-entity  
+            id="animatedModel" 
+            gltf-model="#model" 
+            position="0 0.5 -5"  
+            scale="1 1 1"
+            rotation="0 0 0"
+            visible="false">
+        </a-entity>
+
+        <!-- Cámara fija sin movimiento -->
+        <a-camera id="camera" look-controls="enabled: false" wasd-controls="enabled: false"></a-camera>
+
+    </a-scene>
+
+    <script>
+        const marker = document.querySelector("#marker");
+        const model = document.querySelector("#animatedModel");
+
+        let isModelLoaded = false;
+
+        model.addEventListener("model-loaded", function(event) {
+            console.log("Modelo cargado. Iniciando animación...");
+
+            const animations = event.detail.model.animations.map(a => a.name);
+            console.log("Clips de animación disponibles:", animations);
+
+            if (animations.length > 0) {
+                model.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
+                isModelLoaded = true;
+            } else {
+                console.warn("No se encontraron animaciones en el modelo.");
+            }
+        });
+
+        // Mostrar el modelo cuando se detecta el marcador
+        marker.addEventListener("markerFound", () => {
+            console.log("Marcador detectado. Mostrando modelo...");
+            model.setAttribute("visible", "true");
+
+            if (isModelLoaded) {
+                model.setAttribute("animation-mixer", "clip: *; loop: repeat; timeScale: 1");
+            }
+        });
+
+        // Ocultar el modelo cuando se pierde el marcador
+        marker.addEventListener("markerLost", () => {
+            console.log("Marcador perdido. Ocultando modelo...");
+            model.setAttribute("visible", "false");
+        });
+    </script>
+</body>
+</html>
