@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Graphic Codelab AR</title>
-    <script>
-        // Si la URL es index.html, redirige a /robot
-        if (window.location.pathname.endsWith("index.html") || window.location.pathname === "/") {
-            window.location.href = "/views/robot.html";
-        }
-    </script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@latest/aframe/build/aframe-ar.min.js"></script>
 </head>
 <body>
+    <div id="content"></div> <!-- Aquí se carga la vista -->
+
+    <script>
+        const routes = {
+            "/": "views/robot.html",  // Al abrir index.html, carga robot.html
+            "/index.html": "views/robot.html", 
+            "/whale": "views/whale.html",
+            "/tiger": "views/tiger.html",
+            "/dragon": "views/dragon.html"
+        };
+
+        async function loadView() {
+            const path = window.location.pathname.replace("/Graphic-Codelab-AR-Cards", ""); 
+            const view = routes[path] || routes["/"];
+            document.getElementById("content").innerHTML = await fetch(view).then(res => res.text());
+        }
+
+        loadView();
+    </script>
 </body>
 </html>
+
